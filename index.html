@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:title" content="나는 어떤 동물일까?">
+<meta property="og:description" content="선택만으로 나의 성격 유형을 알아보자!">
+<meta property="og:image" content="https://github.com/H-lemon-1010/typetest000/raw/main/thumb.jpg">
+<meta charset="UTF-8">
+<title>성격 테스트 - 좋아하는 동물</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background: #fdf6e3;
+    font-size: 1.2em; /* 기본 폰트 크기 */
+  }
+
+  h1 { color: #2a7ae2; }
+  .question { margin-bottom: 20px; }
+  .options label { display: block; margin: 5px 0; cursor: pointer; transition: background 0.3s; padding: 5px; border-radius: 5px; }
+  .options label:hover { background-color: #cce4ff; }
+  input[type=radio] { margin-right: 10px; }
+  #result { font-size: 1.5em; margin-top: 20px; color: #2a7ae2; }
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #2a7ae2;
+    color: white;
+    transition: background 0.3s;
+  }
+  button:hover { background-color: #145da0; }
+
+  /* 모바일 대응 */
+  @media (max-width: 600px) {
+    body {
+      font-size: 1.6em !important; /* 모바일에서 글씨 키움 */
+      margin: 10px;
+    }
+
+    button {
+      padding: 15px 25px;
+      font-size: 1.2em;
+    }
+
+    .options label {
+      font-size: 1.2em;
+      padding: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>학교에서 나는?</h1>
+
+<div id="quiz">
+  <div class="question" id="q1">
+    <p>1. 쉬는 시간에 뭐하고 싶어?</p>
+    <div class="options">
+      <label><input type="radio" name="q1" value="A"> 밖에서 뛰어 놀기</label>
+      <label><input type="radio" name="q1" value="B"> 혼자 조용히 쉬기</label>
+      <label><input type="radio" name="q1" value="C"> 주위를 둘러보고 놀 친구 찾기</label>
+      <label><input type="radio" name="q1" value="D"> 교실 안을 둘러보기</label>
+    </div>
+    <button onclick="nextQuestion()">다음</button>
+  </div>
+
+  <div class="question" id="q2" style="display:none">
+    <p>2. 새 친구를 만나면?</p>
+    <div class="options">
+      <label><input type="radio" name="q2" value="A"> 먼저 다가가서 인사한다</label>
+      <label><input type="radio" name="q2" value="B"> 어떤 친구인지 지켜본다</label>
+      <label><input type="radio" name="q2" value="C"> 같이 놀자고 한다</label>
+      <label><input type="radio" name="q2" value="D"> 조용히 웃고 있는다</label>
+    </div>
+    <button onclick="nextQuestion()">다음</button>
+  </div>
+
+  <div class="question" id="q3" style="display:none">
+    <p>3. 숙제를 할 때?</p>
+    <div class="options">
+      <label><input type="radio" name="q3" value="A"> 빨리 끝내고 싶다</label>
+      <label><input type="radio" name="q3" value="B"> 조금씩 한다</label>
+      <label><input type="radio" name="q3" value="C"> 재미있게 한다</label>
+      <label><input type="radio" name="q3" value="D"> 계획 세워서 한다</label>
+    </div>
+    <button onclick="nextQuestion()">다음</button>
+  </div>
+
+  <div class="question" id="q4" style="display:none">
+    <p>4. 친구가 화났을 때?</p>
+    <div class="options">
+      <label><input type="radio" name="q4" value="A"> 다가가 위로한다</label>
+      <label><input type="radio" name="q4" value="B"> 조용히 기다린다</label>
+      <label><input type="radio" name="q4" value="C"> 가서 재미있는 얘기를 해준다</label>
+      <label><input type="radio" name="q4" value="D"> 차분히 상황을 설명해준다</label>
+    </div>
+    <button onclick="nextQuestion()">다음</button>
+  </div>
+
+  <div class="question" id="q5" style="display:none">
+    <p>5. 가장 좋아하는 색은?</p>
+    <div class="options">
+      <label><input type="radio" name="q5" value="A"> 빨강</label>
+      <label><input type="radio" name="q5" value="B"> 파랑</label>
+      <label><input type="radio" name="q5" value="C"> 노랑</label>
+      <label><input type="radio" name="q5" value="D"> 초록</label>
+    </div>
+    <button onclick="nextQuestion()">결과 보기</button>
+  </div>
+
+</div>
+
+<div id="result" style="display:none"></div>
+
+<script>
+let currentQuestion = 1;
+const totalQuestions = 5;
+
+function nextQuestion() {
+  document.getElementById('q' + currentQuestion).style.display = 'none';
+  currentQuestion++;
+  if (currentQuestion <= totalQuestions) {
+    document.getElementById('q' + currentQuestion).style.display = 'block';
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  const answers = ['q1','q2','q3','q4','q5'];
+  const score = {A:0,B:0,C:0,D:0};
+
+  answers.forEach(q => {
+    const checked = document.querySelector('input[name="'+q+'"]:checked');
+    if (checked) score[checked.value]++;
+  });
+
+  let max = 0;
+  let type = '';
+  for (let key in score) {
+    if (score[key] > max) { max = score[key]; type = key; }
+  }
+
+  let resultText = '';
+  if(type==='A') resultText = "🐶강아지형: 활동적이고 적극적이에요!";
+  if(type==='B') resultText = "🐱고양이형: 독립적이고 관찰력이 뛰어나요!";
+  if(type==='C') resultText = "🐰토끼형: 사교적이고 즐거움을 좋아해요!";
+  if(type==='D') resultText = "🐘코끼리형: 침착하고 생각이 깊어요!";
+
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = resultText + '<br><button onclick="resetQuiz()">다시하기</button>';
+  resultDiv.style.display = 'block';
+}
+
+function resetQuiz() {
+  currentQuestion = 1;
+  document.querySelectorAll('.question').forEach(q => q.style.display='none');
+  document.getElementById('q1').style.display='block';
+  document.getElementById('result').style.display='none';
+  document.querySelectorAll('input[type=radio]').forEach(r => r.checked=false);
+}
+  // ===== 여기서부터 화면 크기 대응 JS =====
+function adjustFont() {
+  const width = window.innerWidth;
+  const body = document.body;
+  if (width <= 600) {
+    body.style.fontSize = '20px';  // 모바일에서 글씨 크게
+  } else {
+    body.style.fontSize = '18px';  // PC에서 기본
+  }
+}
+
+window.addEventListener('load', adjustFont);
+window.addEventListener('resize', adjustFont);
+</script>
+
+</body>
+</html>
